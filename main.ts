@@ -82,6 +82,15 @@ export default class MyPlugin extends Plugin {
 			container.style.width = '100%';
 			container.style.height = '200px';
 			container.style.backgroundColor = 'gold';
+			container.style.display = 'flex';
+			container.style.justifyContent = 'center';
+			container.style.alignItems = 'center';
+
+			const div2 = container.createDiv();
+			div2.style.width = '100px';
+			div2.style.height = '100px';
+			div2.style.backgroundColor = 'red';
+
 		});
 	}
 
