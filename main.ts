@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { App, Editor, MarkdownPostProcessorContext, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
 // Remember to rename these classes and interfaces!
 
@@ -76,6 +76,13 @@ export default class MyPlugin extends Plugin {
 
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
 		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
+
+		this.registerMarkdownCodeBlockProcessor('test-plugin', (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+			const container = el.createDiv();
+			container.style.width = '100%';
+			container.style.height = '200px';
+			container.style.backgroundColor = 'gold';
+		});
 	}
 
 	onunload() {
