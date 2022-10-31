@@ -2,6 +2,8 @@
   <div @click="test" class="container" :style="{
     backgroundColor: toggle ? 'red' : 'gold'
   }">
+    <div class="items" v-for="i in items" :key="'item_'+i">
+    </div>
   </div>
 </template>
 
@@ -13,7 +15,8 @@ export default defineComponent({
   name: 'App',
   data() {
     return {
-      toggle: false
+      toggle: false,
+      items: [1,2,3,4,5,6,7,8,9,10]
     }
   },
   methods: {

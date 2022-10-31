@@ -1,7 +1,7 @@
 import { App, Editor, MarkdownPostProcessorContext, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
 import { createApp } from 'vue';
-import VueApp from './App.vue'
+import VueApp from './components/App.vue'
 
 // Remember to rename these classes and interfaces!
 

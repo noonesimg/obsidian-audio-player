@@ -9,4 +9,16 @@ If your plugin does not need CSS, delete this file.
 .container {
   width: 100%;
   height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.items {
+  width: 100px;
+  height: 100px;
+  background-color: blueviolet;
+}
+
+.items:hover {
+  background-color: aqua;
 }
