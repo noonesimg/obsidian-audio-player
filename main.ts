@@ -89,7 +89,7 @@ export default class MyPlugin extends Plugin {
 			const div2 = container.createDiv();
 			div2.style.width = '100px';
 			div2.style.height = '100px';
-			div2.style.backgroundColor = 'red';
+			div2.style.backgroundColor = 'blue';
 
 		});
 	}
