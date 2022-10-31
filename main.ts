@@ -1,5 +1,8 @@
 import { App, Editor, MarkdownPostProcessorContext, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
+import { createApp } from 'vue';
+import VueApp from './App.vue'
+
 // Remember to rename these classes and interfaces!
 
 interface MyPluginSettings {
@@ -86,10 +89,14 @@ export default class MyPlugin extends Plugin {
 			container.style.justifyContent = 'center';
 			container.style.alignItems = 'center';
 
+			createApp(VueApp).mount(container);
+
 			const div2 = container.createDiv();
 			div2.style.width = '100px';
 			div2.style.height = '100px';
 			div2.style.backgroundColor = 'green';
+
+
 
 		});
 	}
