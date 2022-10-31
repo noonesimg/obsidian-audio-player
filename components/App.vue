@@ -1,14 +1,16 @@
 <template>
-  <div @click="test" class="container" :style="{
-    backgroundColor: toggle ? 'red' : 'gold'
-  }">
-    <div class="items" v-for="i in items" :key="'item_'+i">
+  <div @click="test" class="container">
+    <audio controls src="Music/04. Arabella.mp3"></audio>
+    <div class="waveform">
+      <div class="wv" v-for="i in items" :key="'item_'+i">
+      </div>
     </div>
+    
   </div>
 </template>
 
 <script lang="ts">
-import { Notice } from 'obsidian'
+import { Notice, Vault } from 'obsidian'
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -16,13 +18,13 @@ export default defineComponent({
   data() {
     return {
       toggle: false,
-      items: [1,2,3,4,5,6,7,8,9,10]
+      items: [...Array(100).keys()]
     }
   },
   methods: {
     test() {
+      new Notice(String(window.app.vault.getAbstractFileByPath("Music/Files/test.mp3")?.path));
       this.toggle = !this.toggle;
-      new Notice("test from vue");
     }
   }
 })

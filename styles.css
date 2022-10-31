@@ -10,15 +10,24 @@ If your plugin does not need CSS, delete this file.
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  padding: 10px;
 }
-.items {
-  width: 100px;
+.waveform {
+  width: 100%;
+  height: 200px;
+  margin-top: 10px;
+  justify-content: space-between;
+  display: flex;
+}
+.wv {
+  flex: 1;
   height: 100px;
   background-color: blueviolet;
 }
 
-.items:hover {
+.wv:hover {
   background-color: aqua;
 }
