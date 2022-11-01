@@ -1,6 +1,8 @@
 <template>
   <div class="container" @keydown.space="togglePlay" tabindex="0">
-    <audio controls :src="srcPath" ref="audio" @timeupdate="updatePos" class="my-audio"></audio>
+    <audio controls :src="srcPath" ref="audio" 
+      @ended="setPlayIcon"
+      @timeupdate="updatePos" class="my-audio"></audio>
     <div class="vert">
       <div class="playpause" @click="togglePlay" ref="playpause">
       </div>
@@ -48,7 +50,7 @@ export default defineComponent({
       items: [...Array(100).keys()],
       srcPath: '',
       filteredData: [] as number[],
-      nSamples: 200,
+      nSamples: 150,
       duration: 0,
       currentTime: 0,
       currentBar: 0,
@@ -138,7 +140,9 @@ export default defineComponent({
           setIcon(this.button, 'play');
         } 
       }
-      
+    },
+    setPlayIcon() {
+      setIcon(this.button, 'play');
     }
   },
   mounted() {

@@ -37,12 +37,16 @@ If your plugin does not need CSS, delete this file.
 .wv:hover {
   background-color: var(--text-highlight-bg);
 }
+.wv:active {
+  background-color: var(--color-base-10);
+}
+
 .played {
   background-color: var(--color-accent-1);
 }
 .playpause {
   flex: 1;
-  margin: 10px;
+  margin: 6px;
   background-color: var(--color-accent-1);
   display: flex;
   justify-content: center;
@@ -79,6 +83,8 @@ If your plugin does not need CSS, delete this file.
   height: 20px;
   display: flex;
   justify-content: space-between;
+  color: var(--color-base-50);
+  font-size: .9rem;
 }
 .wide {
   width: 100%;
