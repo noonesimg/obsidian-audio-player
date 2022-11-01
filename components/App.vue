@@ -19,7 +19,7 @@
           v-bind:class="{'played': i <= currentBar }"
           @mousedown="setPlayhead($event, i)"
           :style="{
-            height: s + 'px'
+            height: s * 100 + 'px'
           }">
         </div>
       </div>
@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import { TFile, setIcon } from 'obsidian'
+import { TFile, setIcon, Notice } from 'obsidian'
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -81,6 +81,7 @@ export default defineComponent({
     async processAudio(path: string) {
       var arrBuf = await window.app.vault.adapter.readBinary(path);
       const audioContext = new AudioContext();
+      var tempArray = [] as number[];
 
       audioContext.decodeAudioData(arrBuf, (buf) => {
         let rawData = buf.getChannelData(0);
@@ -93,13 +94,18 @@ export default defineComponent({
           for (let j = 0; j < blockSize; j++) {
             sum += Math.abs(rawData[blockStart + j]);
           }
-          sum = this.scale(sum, 0, .5, 0, 200);
-          this.filteredData.push(sum / blockSize);
+          tempArray.push(sum / blockSize);
         }
+        
+        let maxval = Math.max(...tempArray);
+        this.filteredData = tempArray.map(x => x / maxval);
       })
     },
     scale(number: number, inMin: number, inMax: number, outMin: number, outMax: number): number {
       return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+    },
+    test() {
+      new Notice('test');
     },
     convertSecs(num: number) {
       num = Math.floor(num);

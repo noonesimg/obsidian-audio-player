@@ -17,7 +17,7 @@ export default class AudioPlayer extends Plugin {
 	async onload() {
 		this.registerMarkdownCodeBlockProcessor('audio-player', (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
 			// parse file name
-			const re = /\[\[(\w+.\w+)\]\]/g;
+			const re = /\[\[(.+)\]\]/g;
 			const filename = re.exec(source)?.at(1);
 			if (!filename) return;
 			
