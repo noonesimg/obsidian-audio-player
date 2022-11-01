@@ -1,9 +1,17 @@
 <template>
   <div class="container" @keydown.space="togglePlay" tabindex="0">
     <audio controls :src="srcPath" ref="audio" @timeupdate="updatePos" class="my-audio"></audio>
-    <div class="playpause" @click="togglePlay" ref="playpause">
-    </div>
     <div class="vert">
+      <div class="playpause" @click="togglePlay" ref="playpause">
+      </div>
+      <div class="playpause seconds" @click="move(+5)" ref="add5">
+        +5s
+      </div>
+      <div class="playpause seconds" @click="move(-5)" ref="min5">
+        -5s
+      </div>
+    </div>
+    <div class="vert wide">
       <div class="waveform">
         <div class="wv" v-for="(s, i) in filteredData" :key="srcPath+i"
           v-bind:class="{'played': i <= currentBar }"
@@ -94,7 +102,7 @@ export default defineComponent({
     convertSecs(num: number) {
       num = Math.floor(num);
       var h = String(Math.floor(num / 3600)).padStart(2, '0');
-      var m = String(Math.floor(num / 3600 / 60)).padStart(2, '0');
+      var m = String(Math.floor(num / 60)).padStart(2, '0');
       var s = String(Math.floor(num % 3600 % 60)).padStart(2, '0');
 
       return `${h}:${m}:${s}`
@@ -111,6 +119,12 @@ export default defineComponent({
       if (this.audio)
         this.currentTime = this.audio.currentTime;
       this.currentBar = Math.floor(this.currentTime / this.duration * this.nSamples);
+    },
+    move(deltaSec: number) {
+      if (this.audio) {
+        this.audio.currentTime += deltaSec
+        this.currentTime = this.audio.currentTime;
+      }
     },
     togglePlay() {
       if (this.audio) {

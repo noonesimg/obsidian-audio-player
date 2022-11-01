@@ -31,6 +31,7 @@ If your plugin does not need CSS, delete this file.
   height: 100px;
   background-color: var(--color-base-50);
   border-left: 2px solid var(--color-base-10);
+  transition: all .2s;
 }
 
 .wv:hover {
@@ -40,6 +41,7 @@ If your plugin does not need CSS, delete this file.
   background-color: var(--color-accent-1);
 }
 .playpause {
+  flex: 1;
   margin: 10px;
   background-color: var(--color-accent-1);
   display: flex;
@@ -49,14 +51,35 @@ If your plugin does not need CSS, delete this file.
   border-radius: 30px;
   max-height: 40px;
   max-width: 40px;
+  opacity: 0.8;
+  transition: all .15s;
+}
+.playpause:hover {
+  opacity: 1;
+}
+.playpause:active {
+  background-color: var(--color-base-10);
+}
+.seconds {
+  border-radius: 2;
+  min-height: unset;
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 25px;
+  flex: unset;
 }
 .vert { 
-  flex: 1;
   display: flex;
   flex-direction: column;
+}
+.vert:first-of-type { 
+  margin-right: 10px;
 }
 .timeline { 
   height: 20px;
   display: flex;
   justify-content: space-between;
+}
+.wide {
+  width: 100%;
 }

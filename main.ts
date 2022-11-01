@@ -82,7 +82,7 @@ export default class MyPlugin extends Plugin {
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
 		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
 
-		this.registerMarkdownCodeBlockProcessor('test-plugin', (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+		this.registerMarkdownCodeBlockProcessor('audio-player', (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
 			// parse file name
 			const re = /\[\[(\w+.\w+)\]\]/g;
 			const filename = re.exec(source)?.at(1);
