@@ -1,21 +1,32 @@
 <template>
   <div class="container" @keydown.space="togglePlay" tabindex="0">
     <audio controls :src="srcPath" ref="audio" @timeupdate="updatePos" class="my-audio"></audio>
-    <div class="waveform">
-      <div class="wv" v-for="(s, i) in filteredData" :key="srcPath+i"
-        v-bind:class="{'played': i <= currentBar }"
-        @mousedown="setPlayhead($event, i)"
-        :style="{
-          height: s + 'px'
-        }">
+    <div class="playpause" @click="togglePlay" ref="playpause">
+    </div>
+    <div class="vert">
+      <div class="waveform">
+        <div class="wv" v-for="(s, i) in filteredData" :key="srcPath+i"
+          v-bind:class="{'played': i <= currentBar }"
+          @mousedown="setPlayhead($event, i)"
+          :style="{
+            height: s + 'px'
+          }">
+        </div>
+      </div>
+      <div class="timeline">
+        <span class="current-time">
+          {{ displayedCurrentTime }}
+        </span>
+        <span class="duration">
+          {{ displayedDuration }}
+        </span>
       </div>
     </div>
-    
   </div>
 </template>
 
 <script lang="ts">
-import { TFile } from 'obsidian'
+import { TFile, setIcon } from 'obsidian'
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -34,7 +45,16 @@ export default defineComponent({
       currentTime: 0,
       currentBar: 0,
       playing: false,
-      audio: undefined as HTMLAudioElement | undefined
+      audio: undefined as HTMLAudioElement | undefined,
+      button: undefined as HTMLSpanElement | undefined
+    }
+  },
+  computed: {
+    displayedCurrentTime() {
+      return this.convertSecs(this.currentTime);
+    },
+    displayedDuration() {
+      return this.convertSecs(this.duration);
     }
   },
   methods: {
@@ -71,6 +91,14 @@ export default defineComponent({
     scale(number: number, inMin: number, inMax: number, outMin: number, outMax: number): number {
       return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
     },
+    convertSecs(num: number) {
+      num = Math.floor(num);
+      var h = String(Math.floor(num / 3600)).padStart(2, '0');
+      var m = String(Math.floor(num / 3600 / 60)).padStart(2, '0');
+      var s = String(Math.floor(num % 3600 % 60)).padStart(2, '0');
+
+      return `${h}:${m}:${s}`
+    },
     setPlayhead(ev: MouseEvent, i: number) {
       if (this.audio) {
         this.audio.currentTime = i / this.nSamples * this.duration;
@@ -87,16 +115,22 @@ export default defineComponent({
     togglePlay() {
       if (this.audio) {
         this.playing = this.audio.paused;
-        if (this.audio?.paused) 
+        if (this.audio?.paused) {
           this.audio?.play();
-        else 
+          setIcon(this.button, 'pause');
+        } 
+        else {
           this.audio?.pause();
+          setIcon(this.button, 'play');
+        } 
       }
       
     }
   },
   mounted() {
     this.audio = this.$refs.audio as HTMLAudioElement;
+    this.button = this.$refs.playpause as HTMLSpanElement;
+    setIcon(this.button, 'play');
     this.loadFile();
   }
 })

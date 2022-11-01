@@ -95,7 +95,7 @@ export default class MyPlugin extends Plugin {
 			// create root $el
 			const container = el.createDiv();
 			container.style.width = '100%';
-			container.style.height = '200px';
+			container.style.height = 'fit-content';
 			container.style.display = 'flex';
 			container.style.justifyContent = 'center';
 			container.style.alignItems = 'center';
