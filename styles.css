@@ -15,19 +15,31 @@ If your plugin does not need CSS, delete this file.
   align-items: center;
   padding: 10px;
 }
+.my-audio {
+  display: none;
+}
 .waveform {
   width: 100%;
   height: 200px;
   margin-top: 10px;
   justify-content: space-between;
+  align-items: center;
   display: flex;
+  gap: 2px;
 }
+
 .wv {
   flex: 1;
   height: 100px;
-  background-color: blueviolet;
+  background-color: var(--color-base-50);
+  user-select: none;
+  cursor: default;
+  border-radius: 10px;
 }
 
 .wv:hover {
-  background-color: aqua;
+  background-color: var(--color-cyan);
+}
+.played {
+  background-color: var(--color-accent-1);
 }

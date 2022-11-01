@@ -1,4 +1,6 @@
-import { App, Editor, MarkdownPostProcessorContext, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { Console } from 'console';
+import { App, Editor, getLinkpath, MarkdownPostProcessorContext, MarkdownView, MetadataCache, Modal, Notice, parseLinktext, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { text } from 'stream/consumers';
 
 import { createApp } from 'vue';
 import VueApp from './components/App.vue'
@@ -81,6 +83,16 @@ export default class MyPlugin extends Plugin {
 		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
 
 		this.registerMarkdownCodeBlockProcessor('test-plugin', (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+			// parse file name
+			const re = /\[\[(\w+.\w+)\]\]/g;
+			const filename = re.exec(source)?.at(1);
+			if (!filename) return;
+			
+			const allowedExtensions = [ 'mp3', 'wav', 'ogg','flac'];
+			const link = this.app.metadataCache.getFirstLinkpathDest(getLinkpath(filename), filename);
+			if (!link || !allowedExtensions.includes(link.extension)) return;
+
+			// create root $el
 			const container = el.createDiv();
 			container.style.width = '100%';
 			container.style.height = '200px';
@@ -88,7 +100,8 @@ export default class MyPlugin extends Plugin {
 			container.style.justifyContent = 'center';
 			container.style.alignItems = 'center';
 
-			createApp(VueApp).mount(container);
+			//mount vue app
+			createApp(VueApp, { filepath: link.path }).mount(container);
 		});
 	}
 
