@@ -14,6 +14,7 @@ If your plugin does not need CSS, delete this file.
   padding: 10px;
   user-select: none;
   cursor: default;
+  flex-direction: column;
 }
 .my-audio {
   display: none;
@@ -79,6 +80,10 @@ If your plugin does not need CSS, delete this file.
 .vert:first-of-type { 
   margin-right: 10px;
 }
+.horiz {
+  display: flex;
+}
+
 .timeline { 
   height: 20px;
   display: flex;
@@ -88,4 +93,21 @@ If your plugin does not need CSS, delete this file.
 }
 .wide {
   width: 100%;
+}
+
+.comment-list {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.comment {
+  min-height: 20px;
+  transition: all .2s;
+}
+.comment:hover {
+  background-color: var(--text-highlight-bg);
+}
+.comment:active {
+  background-color: var(--color-base-10);
 }

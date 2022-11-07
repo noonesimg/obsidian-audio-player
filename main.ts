@@ -16,11 +16,13 @@ const DEFAULT_SETTINGS: AudioPlayerSettings = {
 export default class AudioPlayer extends Plugin {
 	async onload() {
 		this.registerMarkdownCodeBlockProcessor('audio-player', (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+			var a = ctx.getSectionInfo(el);
+
 			// parse file name
 			const re = /\[\[(.+)\]\]/g;
 			const filename = re.exec(source)?.at(1);
 			if (!filename) return;
-			
+
 			const allowedExtensions = [ 'mp3', 'wav', 'ogg','flac'];
 			const link = this.app.metadataCache.getFirstLinkpathDest(getLinkpath(filename), filename);
 			if (!link || !allowedExtensions.includes(link.extension)) return;
@@ -32,9 +34,9 @@ export default class AudioPlayer extends Plugin {
 			container.style.display = 'flex';
 			container.style.justifyContent = 'center';
 			container.style.alignItems = 'center';
-
+			
 			//mount vue app
-			createApp(VueApp, { filepath: link.path }).mount(container);
+			createApp(VueApp, { filepath: link.path, ctx: ctx, mdElement: el }).mount(container);
 		});
 	}
 }
