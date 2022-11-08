@@ -1,11 +1,17 @@
 <template>
-  <div class="comment" @click="emitMovePlayhead">
-    {{ cmt?.timeString }} - {{ cmt?.content }}
+  <div class="horiz comment" @click.self="emitMovePlayhead">
+    <div class="horiz">
+      <span class="timeline" :style="{ 'marginRight': '10px', 'alignItems': 'flex-end'}">{{ cmt?.timeString }}</span>
+      <span>{{ cmt?.content }}</span>
+    </div>
+    <div @click="emitRemove" class="delete-comment" ref="remove"></div>
   </div>
+  
 </template>
 
 <script lang="ts">
-import { AudioComment } from 'types';
+import { setIcon } from 'obsidian';
+import { AudioComment } from './types';
 import { defineComponent, PropType } from 'vue';
 export default defineComponent({
   name: 'AudioComment',
@@ -15,8 +21,15 @@ export default defineComponent({
   methods: {
     emitMovePlayhead() {
       this.$emit('move-playhead', this.cmt?.timeNumber);
+    },
+    emitRemove() {
+      this.$emit('remove', this.cmt.index);
     }
   },
+  mounted() {
+    this.button = this.$refs.remove as HTMLSpanElement;
+    setIcon(this.button, 'cross');
+  }
 })
 
 </script>

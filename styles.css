@@ -104,10 +104,30 @@ If your plugin does not need CSS, delete this file.
 .comment {
   min-height: 20px;
   transition: all .2s;
+  justify-content: space-between;
 }
 .comment:hover {
   background-color: var(--text-highlight-bg);
 }
 .comment:active {
   background-color: var(--color-base-10);
+}
+.delete-comment {
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .2s;
+}
+.delete-comment:hover {
+  background-color: var(--color-red);
+}
+.delete-comment:active {
+  background-color: var(--color-base-10);
+}
+
+.comment-input {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
 }

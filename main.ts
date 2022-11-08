@@ -1,6 +1,6 @@
-import { getLinkpath, MarkdownPostProcessorContext, Plugin } from 'obsidian';
+import { getLinkpath, MarkdownPostProcessorContext, Notice, Plugin, PluginManifest } from 'obsidian';
 
-import { createApp } from 'vue';
+import { App, createApp, h } from 'vue';
 import VueApp from './components/App.vue'
 
 // Remember to rename these classes and interfaces!
@@ -14,10 +14,26 @@ const DEFAULT_SETTINGS: AudioPlayerSettings = {
 }
 
 export default class AudioPlayer extends Plugin {
-	async onload() {
-		this.registerMarkdownCodeBlockProcessor('audio-player', (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-			var a = ctx.getSectionInfo(el);
 
+
+	async onload() {
+		const player = document.createElement('audio');
+		player.volume = 0.5;
+		const body = document.getElementsByTagName('body')[0]
+		body.appendChild(player);
+
+		this.addCommand({
+      id: 'pause-audio',
+      name: 'Pause Audio',
+      callback: () => {
+				new Notice('Audio paused');
+				const ev = new Event('allpause');
+      	document.dispatchEvent(ev);
+        player.pause();
+      },
+    });
+
+		this.registerMarkdownCodeBlockProcessor('audio-player', (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
 			// parse file name
 			const re = /\[\[(.+)\]\]/g;
 			const filename = re.exec(source)?.at(1);
@@ -36,7 +52,7 @@ export default class AudioPlayer extends Plugin {
 			container.style.alignItems = 'center';
 			
 			//mount vue app
-			createApp(VueApp, { filepath: link.path, ctx: ctx, mdElement: el }).mount(container);
+			createApp(VueApp, { filepath: link.path, ctx: ctx, mdElement: el, audio: player }).mount(el)
 		});
 	}
 }

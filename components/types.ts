@@ -1,5 +1,6 @@
 export type AudioComment = {
   content: string,
   timeNumber: number,
-  timeString: string
+  timeString: string,
+  index: number
 }
