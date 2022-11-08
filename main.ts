@@ -32,6 +32,16 @@ export default class AudioPlayer extends Plugin {
         player.pause();
       },
     });
+
+		this.addCommand({
+      id: 'resume-audio',
+      name: 'Resume Audio',
+      callback: () => {
+				if (player.src)
+        	player.play();
+      },
+    });
+
 		this.registerMarkdownCodeBlockProcessor('audio-player', (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
 			// parse file name
 			const re = /\[\[(.+)\]\]/g;
