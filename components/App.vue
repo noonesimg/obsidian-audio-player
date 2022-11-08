@@ -1,7 +1,7 @@
 <template>
   <div class="container" tabindex="0">
     <div class="horiz">
-      <div class="vert">
+      <div v-show="!smallSize" class="vert">
         <div class="playpause" @click="togglePlay" ref="playpause">
         </div>
         <div class="playpause seconds" @click="setPlayheadSecs(currentTime+5)" ref="add5">
@@ -29,6 +29,16 @@
             {{ displayedDuration }}
           </span>
         </div>
+      </div>
+    </div>
+    <div v-show="smallSize" class="horiz" :style="{'margin': 'auto'}">
+      <div class="playpause seconds" @click="setPlayheadSecs(currentTime-5)" ref="min5">
+        -5s
+      </div>
+      <div class="playpause play-button" @click="togglePlay" ref="playpause1">
+      </div>
+      <div class="playpause seconds" @click="setPlayheadSecs(currentTime+5)" ref="add5">
+        +5s
       </div>
     </div>
     <div v-if="showInput" class="comment-input">
@@ -77,20 +87,28 @@ export default defineComponent({
       currentTime: 0,
       playing: false,
       button: undefined as HTMLSpanElement | undefined,
+      button1: undefined as HTMLSpanElement | undefined,
 
       clickCount: 0,
       showInput: false,
       newComment: '',
-      comments: [] as AudioComment[]
+      comments: [] as AudioComment[],
+
+      ro: ResizeObserver,
+      smallSize: false,
     }
   },
   computed: {
     displayedCurrentTime() { return secondsToString(this.currentTime); },
     displayedDuration() { return secondsToString(this.duration); },
-    currentBar() { return Math.floor(this.currentTime / this.duration * this.nSamples); }
+    currentBar() { return Math.floor(this.currentTime / this.duration * this.nSamples); },
   },
   methods: {
     getSectionInfo() { return this.ctx.getSectionInfo(this.mdElement); },
+    getParentWidth() { return this.mdElement.clientWidth },
+    onResize() { 
+      this.smallSize = this.$el.clientWidth < 300;
+    },
     async loadFile() {
       // read file from vault 
       const file = window.app.vault.getAbstractFileByPath(this.filepath) as TFile;
@@ -154,7 +172,6 @@ export default defineComponent({
           var input = this.$refs.commentInput as HTMLInputElement;
           input.focus();
         })
-
       } else {
         let time = i / this.nSamples * this.duration;
         this.setPlayheadSecs(time);
@@ -198,8 +215,10 @@ export default defineComponent({
       if (this.audio.src === this.srcPath)
         this.currentTime = this.audio?.currentTime;
     },
-    setBtnIcon(icon: string) { setIcon(this.button, icon); },
-    
+    setBtnIcon(icon: string) { 
+      setIcon(this.button, icon);
+      setIcon(this.button1, icon); 
+    },
 
     addComment() {
       if (this.newComment.length == 0)
@@ -241,6 +260,7 @@ export default defineComponent({
   },
   mounted() {
     this.button = this.$refs.playpause as HTMLSpanElement;
+    this.button1 = this.$refs.playpause1 as HTMLSpanElement;
     this.setBtnIcon('play');
 
     // add event listeners
@@ -251,6 +271,10 @@ export default defineComponent({
         this.setBtnIcon('play');
     });
 
+    this.$el.addEventListener('resize', () => {
+      console.log(this.$el.clientWidth);
+    })
+
     // get current time
     if (this.audio.src === this.srcPath) {
       this.currentTime = this.audio.currentTime
@@ -260,6 +284,13 @@ export default defineComponent({
 
     // load comments
     setTimeout(() => { this.comments = this.getComments(); });
+
+
+    this.ro = new ResizeObserver(this.onResize);
+    this.ro.observe(this.$el);
+  },
+  beforeDestroy() {
+    this.ro.unobserve(this.$el);
   }
 })
 

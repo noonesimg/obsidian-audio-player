@@ -102,16 +102,24 @@ If your plugin does not need CSS, delete this file.
   gap: 2px;
 }
 .comment {
+  margin-left: 5px;
   min-height: 20px;
   transition: all .2s;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 62px 1fr 16px 4px;
 }
+
 .comment:hover {
-  background-color: var(--text-highlight-bg);
+  background-color: var(--background-modifier-cover);
 }
 .comment:active {
   background-color: var(--color-base-10);
 }
+
+.comment > .timestamp {
+  color: var(--color-base-50);
+}
+
 .delete-comment {
   width: 20px;
   display: flex;
@@ -130,4 +138,8 @@ If your plugin does not need CSS, delete this file.
   display: flex;
   gap: 6px;
   margin-top: 4px;
+}
+.comment > .content {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

@@ -1,9 +1,7 @@
 <template>
-  <div class="horiz comment" @click.self="emitMovePlayhead">
-    <div class="horiz">
-      <span class="timeline" :style="{ 'marginRight': '10px', 'alignItems': 'flex-end'}">{{ cmt?.timeString }}</span>
-      <span>{{ cmt?.content }}</span>
-    </div>
+  <div class="comment">
+    <span class="timestamp" @click="emitMovePlayhead">{{ cmt?.timeString }}</span>
+    <span class="content">{{ cmt?.content }}</span>
     <div @click="emitRemove" class="delete-comment" ref="remove"></div>
   </div>
   

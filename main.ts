@@ -32,7 +32,6 @@ export default class AudioPlayer extends Plugin {
         player.pause();
       },
     });
-
 		this.registerMarkdownCodeBlockProcessor('audio-player', (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
 			// parse file name
 			const re = /\[\[(.+)\]\]/g;
