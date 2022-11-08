@@ -49,7 +49,7 @@
       <button @click="showInput = false; newComment = ''">Cancel</button>
     </div>
     <div class="comment-list">
-      <AudioCommentVue v-for="cmt in comments" 
+      <AudioCommentVue v-for="cmt in commentsSorted" 
         @move-playhead="setPlayheadSecs" @remove="removeComment"
         :cmt="cmt" :key="cmt.timeString"></AudioCommentVue>
     </div>
@@ -102,6 +102,7 @@ export default defineComponent({
     displayedCurrentTime() { return secondsToString(this.currentTime); },
     displayedDuration() { return secondsToString(this.duration); },
     currentBar() { return Math.floor(this.currentTime / this.duration * this.nSamples); },
+    commentsSorted() { return this.comments.sort((x: AudioComment, y:AudioComment) => x.timeNumber - y.timeNumber); }
   },
   methods: {
     getSectionInfo() { return this.ctx.getSectionInfo(this.mdElement); },
@@ -253,7 +254,7 @@ export default defineComponent({
         return cmt;
       });
       return cmts;
-    }
+    },
   },
   created() { 
     this.loadFile();
