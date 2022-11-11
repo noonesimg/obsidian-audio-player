@@ -1,4 +1,4 @@
-# Obsidian Audio Bookmarks
+# Obsidian Audio Player
 
 - one audio instance for the whole obsidian vault
 - easy to initialize
@@ -7,7 +7,7 @@
 - add bookmarks to your audio files
 
 ## Demo
-to be added...
+![add_audio](https://user-images.githubusercontent.com/117757392/201384119-fa94f5bc-dc8f-4e03-8822-0f8948aa52dd.gif)
 
 ## How to use
 ~~~
@@ -24,10 +24,12 @@ accessable through command menu (Ctrl-P)
 2. **Resume Audio** to resume 
 
 ### Add bookmarks through ui
+![add_bookmark](https://user-images.githubusercontent.com/117757392/201384274-14831e0b-458e-4a01-9869-34f34ad628cc.gif)
 
 1. Double click on any of the bars on the wave visualizer, 
 2. Type your text
 3. Hit enter or press the "Add" button
+4. Click on any bookmark timecode to set the playhead position
 
 ### Add bookmarks through text
 ~~~
@@ -35,10 +37,11 @@ accessable through command menu (Ctrl-P)
 [[my awesome audio file.mp3]]
 00:00:44 --- chapter
 00:01:50 --- chapter 2 
-00:02:40 --- chapter in which 
+00:02:40 --- chapter 3 in which nothing happened
 ```
 ~~~
-Click on any bookmark timecode to set the playhead position
+![image](https://user-images.githubusercontent.com/117757392/201384550-33aa7f25-cadc-4ce5-a846-24d87bd7a05d.png)
+
 
 ## How to install
 
@@ -66,4 +69,4 @@ The plugin is free, athough if you wanna say thanks, feel free to buy me a coffe
 
 
 ## Notes 
-If there're any bugs, don't hesitate to open an issue 
+If there're any bugs or instabilities, don't hesitate to open an issue 
