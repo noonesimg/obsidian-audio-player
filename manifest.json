@@ -4,7 +4,7 @@
 	"version": "0.1.0",
 	"minAppVersion": "0.15.0",
 	"description": "Audio player with background playback, bookmarks and wave visualiser instead of the default html5 audio",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
+	"author": "noones img",
+	"authorUrl": "https://github.com/noonesimg",
 	"isDesktopOnly": false
 }
