@@ -37,6 +37,9 @@ export default class AudioPlayer extends Plugin {
       id: 'resume-audio',
       name: 'Resume Audio',
       callback: () => {
+				new Notice('Audio resumed');
+				const ev = new Event('allresume');
+      	document.dispatchEvent(ev);
 				if (player.src)
         	player.play();
       },

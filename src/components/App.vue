@@ -59,8 +59,8 @@
 <script lang="ts">
 import { TFile, setIcon, MarkdownPostProcessorContext } from 'obsidian'
 import { defineComponent, PropType } from 'vue';
-import { AudioComment } from './types'
-import { secondsToString, secondsToNumber } from './utils'
+import { AudioComment } from '../types'
+import { secondsToString, secondsToNumber } from '../utils'
 
 import AudioCommentVue from './AudioComment.vue';
 
@@ -266,7 +266,12 @@ export default defineComponent({
 
     // add event listeners
     document.addEventListener('allpause', () => {  this.setBtnIcon('play'); });
-    
+    document.addEventListener('allresume', () => {
+      console.log('test');
+      if (this.audio.src === this.srcPath) {
+        this.setBtnIcon('pause');
+      }
+    })
     this.audio.addEventListener('ended', () => {
       if (this.audio.src === this.srcPath)
         this.setBtnIcon('play');

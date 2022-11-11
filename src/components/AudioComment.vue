@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { setIcon } from 'obsidian';
-import { AudioComment } from './types';
+import { AudioComment } from '../types';
 import { defineComponent, PropType } from 'vue';
 export default defineComponent({
   name: 'AudioComment',

@@ -36,7 +36,7 @@ If your plugin does not need CSS, delete this file.
 }
 
 .wv:hover {
-  background-color: var(--text-highlight-bg);
+  background-color: var(--color-accent-2);
 }
 .wv:active {
   background-color: var(--color-base-10);
