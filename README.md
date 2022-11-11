@@ -42,12 +42,22 @@ Click on any bookmark timecode to set the playhead position
 
 # How to install
 
+## From Obsidian
+
 1. Open Settings > Thrid-party plugin
 2. Make sure Safe mode is off
 3. Click Browse community plugins
 4. Search Audio Player
 5. Click install
 6. Close community plugin browser and activate the plugin
+
+### Using Git
+just go to .obsidian/plugins folder inside your vault
+open terminal and call 
+
+```
+git clone 
+```
 
 # Pricing
 The plugin is free, athough if you wanna say thanks, feel free to buy me a coffee
