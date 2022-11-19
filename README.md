@@ -45,7 +45,7 @@ accessable through command menu (Ctrl-P)
 
 ## How to install
 
-### From Obsidian
+### From Obsidian [Not available yet]
 
 1. Open Settings > Thrid-party plugin
 2. Make sure Safe mode is off
