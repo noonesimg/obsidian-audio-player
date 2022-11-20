@@ -62,7 +62,7 @@ accessable through command menu (Ctrl-P)
 4. Open obsidian
 5. Go to settings -> community plugins
 6. Scroll down, find "Audio Player" plugin and enable it
-```
+
 
 ## Pricing
 The plugin is free, athough if you wanna say thanks, feel free to buy me a coffee
