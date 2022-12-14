@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-audio-player",
 	"name": "Audio Player",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"minAppVersion": "0.15.0",
 	"description": "Audio player with background playback, bookmarks and wave visualiser instead of the default html5 audio",
 	"author": "noones img",
