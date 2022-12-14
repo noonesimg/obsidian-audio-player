@@ -1,5 +1,5 @@
 <template>
-  <div class="container" tabindex="0">
+  <div class="audio-player-ui" tabindex="0">
     <div class="horiz">
       <div v-show="!smallSize" class="vert">
         <div class="playpause" @click="togglePlay" ref="playpause">
@@ -138,9 +138,9 @@ export default defineComponent({
       return true;
     },  
     async processAudio(path: string) {
-      var arrBuf = await window.app.vault.adapter.readBinary(path);
+      const arrBuf = await window.app.vault.adapter.readBinary(path);
       const audioContext = new AudioContext();
-      var tempArray = [] as number[];
+      const tempArray = [] as number[];
 
       audioContext.decodeAudioData(arrBuf, (buf) => {
         let rawData = buf.getChannelData(0);
@@ -170,7 +170,7 @@ export default defineComponent({
       if (this.clickCount >= 2) {
         this.showInput = true;
         setTimeout(() => {
-          var input = this.$refs.commentInput as HTMLInputElement;
+          const input = this.$refs.commentInput as HTMLInputElement;
           input.focus();
         })
       } else {
@@ -224,28 +224,28 @@ export default defineComponent({
     addComment() {
       if (this.newComment.length == 0)
         return;
-      var sectionInfo = this.getSectionInfo();
-      var lines = sectionInfo.text.split('\n') as string[];
-      var timeStamp = secondsToString(this.currentTime);
+      const sectionInfo = this.getSectionInfo();
+      const lines = sectionInfo.text.split('\n') as string[];
+      const timeStamp = secondsToString(this.currentTime);
       lines.splice(sectionInfo.lineEnd, 0, `${timeStamp} --- ${this.newComment}`);
 
       window.app.vault.adapter.write(this.ctx.sourcePath, lines.join('\n'))
     },
     removeComment(i: number) {
-      var sectionInfo = this.getSectionInfo();
-      var lines = sectionInfo.text.split('\n') as string[];
+      const sectionInfo = this.getSectionInfo();
+      const lines = sectionInfo.text.split('\n') as string[];
       lines.splice(sectionInfo.lineStart + 2 + i, 1);
       window.app.vault.adapter.write(this.ctx.sourcePath, lines.join('\n'))
     },
     getComments() : Array<AudioComment> {
-      var sectionInfo = this.getSectionInfo();
-      var lines = sectionInfo.text.split('\n') as string[];
-      var cmtLines = lines.slice(sectionInfo.lineStart + 2, sectionInfo.lineEnd);
+      const sectionInfo = this.getSectionInfo();
+      const lines = sectionInfo.text.split('\n') as string[];
+      const cmtLines = lines.slice(sectionInfo.lineStart + 2, sectionInfo.lineEnd);
 
-      var cmts = cmtLines.map((x, i) => {
-        var split = x.split(' --- ');
-        var timeStamp = secondsToNumber(split[0]);
-        var cmt: AudioComment = {
+      const cmts = cmtLines.map((x, i) => {
+        const split = x.split(' --- ');
+        const timeStamp = secondsToNumber(split[0]);
+        const cmt: AudioComment = {
           timeNumber: timeStamp,
           timeString: split[0],
           content: split[1],

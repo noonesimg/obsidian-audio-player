@@ -6,147 +6,156 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
-.container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  user-select: none;
-  cursor: default;
-  flex-direction: column;
+.audio-player-container {
+	width: 100%;
+	height: fit-content;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.audio-player-ui {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: space-between;
+	padding: 10px;
+	user-select: none;
+	cursor: default;
+	flex-direction: column;
 }
 .my-audio {
-  display: none;
+	display: none;
 }
 .waveform {
-  width: 100%;
-  margin-top: 10px;
-  justify-content: space-between;
-  align-items: baseline;
-  display: flex;
+	width: 100%;
+	margin-top: 10px;
+	justify-content: space-between;
+	align-items: baseline;
+	display: flex;
 }
 
 .wv {
-  flex: 1;
-  height: 100px;
-  background-color: var(--color-base-50);
-  border-left: 1px solid var(--color-base-10); 
-  transition: all .2s;
+	flex: 1;
+	height: 100px;
+	background-color: var(--color-base-50);
+	border-left: 1px solid var(--color-base-10);
+	transition: all 0.2s;
 }
 
 .wv:hover {
-  background-color: var(--color-accent-2);
+	background-color: var(--color-accent-2);
 }
 .wv:active {
-  background-color: var(--color-base-10);
+	background-color: var(--color-base-10);
 }
 
 .played {
-  background-color: var(--color-accent-1);
+	background-color: var(--color-accent-1);
 }
 .playpause {
-  flex: 1;
-  margin: 6px;
-  background-color: var(--color-accent-1);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  border-radius: 30px;
-  max-height: 40px;
-  max-width: 40px;
-  opacity: 0.8;
-  transition: all .15s;
+	flex: 1;
+	margin: 6px;
+	background-color: var(--color-accent-1);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 10px;
+	border-radius: 30px;
+	max-height: 40px;
+	max-width: 40px;
+	opacity: 0.8;
+	transition: all 0.15s;
 }
 .playpause:hover {
-  opacity: 1;
+	opacity: 1;
 }
 .playpause:active {
-  background-color: var(--color-base-10);
+	background-color: var(--color-base-10);
 }
 .seconds {
-  border-radius: 2;
-  min-height: unset;
-  padding-top: 0;
-  padding-bottom: 0;
-  height: 25px;
-  flex: unset;
+	border-radius: 2;
+	min-height: unset;
+	padding-top: 0;
+	padding-bottom: 0;
+	height: 25px;
+	flex: unset;
 }
-.vert { 
-  display: flex;
-  flex-direction: column;
+.vert {
+	display: flex;
+	flex-direction: column;
 }
-.vert:first-of-type { 
-  margin-right: 10px;
+.vert:first-of-type {
+	margin-right: 10px;
 }
 .horiz {
-  display: flex;
+	display: flex;
 }
 
-.timeline { 
-  height: 20px;
-  display: flex;
-  justify-content: space-between;
-  color: var(--color-base-50);
-  font-size: .9rem;
+.timeline {
+	height: 20px;
+	display: flex;
+	justify-content: space-between;
+	color: var(--color-base-50);
+	font-size: 0.9rem;
 }
 .wide {
-  width: 100%;
+	width: 100%;
 }
 
 .comment-list {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+	margin-top: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
 }
 .comment {
-  margin-left: 5px;
-  min-height: 20px;
-  transition: all .2s;
-  display: grid;
-  grid-template-columns: 62px 1fr 16px;
-  gap: 10px;
-  padding-right: 4px;
+	margin-left: 5px;
+	min-height: 20px;
+	transition: all 0.2s;
+	display: grid;
+	grid-template-columns: 62px 1fr 16px;
+	gap: 10px;
+	padding-right: 4px;
 }
 
 .comment:hover {
-  background-color: var(--background-modifier-cover);
+	background-color: var(--background-modifier-cover);
 }
 .comment:active {
-  background-color: var(--color-base-10);
+	background-color: var(--color-base-10);
 }
 
-.comment > .timestamp, .comment > .delete-comment {
-  color: var(--color-base-50);
+.comment > .timestamp,
+.comment > .delete-comment {
+	color: var(--color-base-50);
 }
 
 .delete-comment {
-  width: 20px;
-  height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all .2s;
+	width: 20px;
+	height: 22px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.2s;
 }
 .delete-comment:hover {
-  background-color: var(--color-red);
-  color: var(--white);
+	background-color: var(--color-red);
+	color: var(--white);
 }
 .delete-comment:active {
-  background-color: var(--color-base-10);
+	background-color: var(--color-base-10);
 }
 
 .comment-input {
-  display: flex;
-  gap: 6px;
-  margin-top: 4px;
+	display: flex;
+	gap: 6px;
+	margin-top: 4px;
 }
 .comment > .content {
-  overflow: hidden;
-  text-overflow: ellipsis;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .comment > .timestamp:hover {
-  color: var(--color-accent-1);
+	color: var(--color-accent-1);
 }
