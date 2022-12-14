@@ -55,12 +55,14 @@ accessable through command menu (Ctrl-P)
 6. Close community plugin browser and activate the plugin
 
 ### Using Git
-using terminal go to .obsidian/plugins folder inside your vault
-and then do 
 
-```
-git clone https://github.com/noonesimg/obsidian-audio-player.git
-```
+1. Close obsidian
+2. Go to your vault .obsidian/plugins folder in the terminal
+3. git clone https://github.com/noonesimg/obsidian-audio-player.git
+4. Open obsidian
+5. Go to settings -> community plugins
+6. Scroll down, find "Audio Player" plugin and enable it
+
 
 ## Pricing
 The plugin is free, athough if you wanna say thanks, feel free to buy me a coffee
