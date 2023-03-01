@@ -244,21 +244,22 @@ export default defineComponent({
     getPlaybackSpeed() : number{
       const sectionInfo = this.getSectionInfo();
       const lines = sectionInfo.text.split('\n') as string[];
+      const defaultSpeed = this.audio.defaultPlaybackRate;
       
-      const regex = new RegExp('playback: (.*)', 'g');
+      const regex = new RegExp('playback: *([0-9\.]*)', 'g');
       const filteredLines = lines.filter(item => item.match(regex));
 
-      if(filteredLines.length == 0) return 1;
+      if(filteredLines.length == 0) return defaultSpeed;
 
       const playbackSpeed = regex.exec(filteredLines[0])?.at(1);
 
-      if(!(playbackSpeed === undefined)){
-        var numericRepr = parseFloat(playbackSpeed);
+      if((playbackSpeed === undefined)) return defaultSpeed;
+      
+      var numericRepr = parseFloat(playbackSpeed);
 
-        if(!isNaN(numericRepr)) return numericRepr;
-      }
+      if(isNaN(numericRepr)) return defaultSpeed;
 
-      return 1;
+      return numericRepr;
     },
     getComments() : Array<AudioComment> {
       const sectionInfo = this.getSectionInfo();
