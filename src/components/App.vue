@@ -178,6 +178,9 @@ export default defineComponent({
         this.setPlayheadSecs(time);
       }
     },
+    setPlayBackRate(multiplier : number){
+      this.audio.playbackRate = multiplier;
+    },
     setPlayheadSecs(time: any) {
       this.currentTime = time;
       if (this.audio.src === this.srcPath) {
@@ -200,6 +203,7 @@ export default defineComponent({
       if (this.currentTime > 0) {
         this.audio.currentTime = this.currentTime;
       }
+      this.setPlayBackRate(this.getPlaybackSpeed());
       this.audio.addEventListener('timeupdate', this.timeUpdateHandler);
       this.audio?.play();
       this.setBtnIcon('pause');      
@@ -237,12 +241,34 @@ export default defineComponent({
       lines.splice(sectionInfo.lineStart + 2 + i, 1);
       window.app.vault.adapter.write(this.ctx.sourcePath, lines.join('\n'))
     },
+    getPlaybackSpeed() : number{
+      const sectionInfo = this.getSectionInfo();
+      const lines = sectionInfo.text.split('\n') as string[];
+      
+      const regex = new RegExp('playback: (.*)', 'g');
+      const filteredLines = lines.filter(item => item.match(regex));
+
+      if(filteredLines.length == 0) return 1;
+
+      const playbackSpeed = regex.exec(filteredLines[0])?.at(1);
+
+      if(!(playbackSpeed === undefined)){
+        var numericRepr = parseFloat(playbackSpeed);
+
+        if(!isNaN(numericRepr)) return numericRepr;
+      }
+
+      return 1;
+    },
     getComments() : Array<AudioComment> {
       const sectionInfo = this.getSectionInfo();
       const lines = sectionInfo.text.split('\n') as string[];
       const cmtLines = lines.slice(sectionInfo.lineStart + 2, sectionInfo.lineEnd);
 
-      const cmts = cmtLines.map((x, i) => {
+      const regex = new RegExp('[0-9]+:[0-9]+:[0-9]+ --- .*', 'g');
+      const filteredLines = cmtLines.filter(item => item.match(regex));
+
+      const cmts = filteredLines.map((x, i) => {
         const split = x.split(' --- ');
         const timeStamp = secondsToNumber(split[0]);
         const cmt: AudioComment = {
