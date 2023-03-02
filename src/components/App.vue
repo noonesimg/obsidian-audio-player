@@ -35,7 +35,7 @@
       <div class="playpause seconds" @click="setPlayheadSecs(currentTime-5)" ref="min5">
         -5s
       </div>
-      <div class="playpause play-button" @click="togglePlay" ref="playpause1">
+      <div class="playpause play-button" @click="togglePlay" ref="playPauseSmall">
       </div>
       <div class="playpause seconds" @click="setPlayheadSecs(currentTime+5)" ref="add5">
         +5s
@@ -87,7 +87,7 @@ export default defineComponent({
       currentTime: 0,
       playing: false,
       button: undefined as HTMLSpanElement | undefined,
-      button1: undefined as HTMLSpanElement | undefined,
+      buttonSmall: undefined as HTMLSpanElement | undefined,
 
       clickCount: 0,
       showInput: false,
@@ -226,7 +226,7 @@ export default defineComponent({
     },
     setBtnIcon(icon: string) { 
       setIcon(this.button, icon);
-      setIcon(this.button1, icon); 
+      setIcon(this.buttonSmall, icon); 
     },
     getCodeBlockSettingsValues(expretion : RegExp) : Array<string>
     {
@@ -317,17 +317,22 @@ export default defineComponent({
   },
   mounted() {
     this.button = this.$refs.playpause as HTMLSpanElement;
-    this.button1 = this.$refs.playpause1 as HTMLSpanElement;
+    this.buttonSmall = this.$refs.playPauseSmall as HTMLSpanElement;
     this.setBtnIcon('play');
 
     // add event listeners
     document.addEventListener('allpause', () => {  this.setBtnIcon('play'); });
     document.addEventListener('allresume', () => {
-      console.log('test');
       if (this.audio.src === this.srcPath) {
         this.setBtnIcon('pause');
       }
-    })
+    });
+    document.addEventListener('togglePlayState', () => {
+      if (this.audio.src === this.srcPath) {
+        this.togglePlay()
+        this.setBtnIcon(this.audio.paused ? 'play' : 'pause');
+      }
+    });
     this.audio.addEventListener('ended', () => {
       if (this.audio.src === this.srcPath)
         this.setBtnIcon('play');
