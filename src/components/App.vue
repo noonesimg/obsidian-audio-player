@@ -181,6 +181,9 @@ export default defineComponent({
     setPlayBackRate(multiplier : number){
       this.audio.playbackRate = multiplier;
     },
+    setLoopValue(value : boolean){
+      this.audio.loop = value;
+    },
     setPlayheadSecs(time: any) {
       this.currentTime = time;
       if (this.audio.src === this.srcPath) {
@@ -203,7 +206,8 @@ export default defineComponent({
       if (this.currentTime > 0) {
         this.audio.currentTime = this.currentTime;
       }
-      this.setPlayBackRate(this.getPlaybackSpeed());
+      this.setPlayBackRate(this.getPlaybackSpeedSetting());
+      this.setLoopValue(this.getLoopSetting());
       this.audio.addEventListener('timeupdate', this.timeUpdateHandler);
       this.audio?.play();
       this.setBtnIcon('pause');      
@@ -224,7 +228,25 @@ export default defineComponent({
       setIcon(this.button, icon);
       setIcon(this.button1, icon); 
     },
+    getCodeBlockSettingsValues(expretion : RegExp) : Array<string>
+    {
+        const sectionInfo = this.getSectionInfo();
+        const lines = sectionInfo.text.split('\n') as string[];
 
+        return lines.filter(item => item.match(expretion));
+    },
+    getFirstOrDefaultSettingsValue(expretion : RegExp) : string | null 
+    {
+      const filteredLines = this.getCodeBlockSettingsValues(expretion)
+
+      if(filteredLines.length == 0) return null;
+
+      const settingValue = expretion.exec(filteredLines[0])?.at(1);
+
+      if((settingValue === undefined)) return null;
+
+      return settingValue;
+    },
     addComment() {
       if (this.newComment.length == 0)
         return;
@@ -241,33 +263,40 @@ export default defineComponent({
       lines.splice(sectionInfo.lineStart + 2 + i, 1);
       window.app.vault.adapter.write(this.ctx.sourcePath, lines.join('\n'))
     },
-    getPlaybackSpeed() : number{
-      const sectionInfo = this.getSectionInfo();
-      const lines = sectionInfo.text.split('\n') as string[];
+    getLoopValue() : boolean {
+
+      return false;
+    },
+    getPlaybackSpeedSetting() : number {
       const defaultSpeed = this.audio.defaultPlaybackRate;
       
       const regex = new RegExp('playback: *([0-9\.]*)', 'g');
-      const filteredLines = lines.filter(item => item.match(regex));
-
-      if(filteredLines.length == 0) return defaultSpeed;
-
-      const playbackSpeed = regex.exec(filteredLines[0])?.at(1);
-
-      if((playbackSpeed === undefined)) return defaultSpeed;
       
+      const playbackSpeed = this.getFirstOrDefaultSettingsValue(regex);
+      
+      if((playbackSpeed === null)) return defaultSpeed;
+
       var numericRepr = parseFloat(playbackSpeed);
 
       if(isNaN(numericRepr)) return defaultSpeed;
 
       return numericRepr;
     },
-    getComments() : Array<AudioComment> {
+    getLoopSetting() : boolean {
+      const defaultSpeed = this.audio.defaultPlaybackRate;
+      
+      const regex = new RegExp('loop: *((t|T)rue)', 'g');
+      
+      const loopSetting = this.getFirstOrDefaultSettingsValue(regex);
+      
+      return !(loopSetting === null);
+    },
+    getBookmarkValues() : Array<AudioComment> {
       const sectionInfo = this.getSectionInfo();
       const lines = sectionInfo.text.split('\n') as string[];
-      const cmtLines = lines.slice(sectionInfo.lineStart + 2, sectionInfo.lineEnd);
 
       const regex = new RegExp('[0-9]+:[0-9]+:[0-9]+ --- .*', 'g');
-      const filteredLines = cmtLines.filter(item => item.match(regex));
+      const filteredLines = lines.filter(item => item.match(regex));
 
       const cmts = filteredLines.map((x, i) => {
         const split = x.split(' --- ');
@@ -316,7 +345,7 @@ export default defineComponent({
     }
 
     // load comments
-    setTimeout(() => { this.comments = this.getComments(); });
+    setTimeout(() => { this.comments = this.getBookmarkValues(); });
 
 
     this.ro = new ResizeObserver(this.onResize);
