@@ -30,6 +30,10 @@
           </span>
         </div>
       </div>
+      <div v-show="!smallSize" class="vert">
+        <div class="bookmarkButton" @click="onBookMarkClicked" ref="bookmarkButton">
+        </div>
+      </div>
     </div>
     <div v-show="smallSize" class="horiz" :style="{'margin': 'auto'}">
       <div class="playpause seconds" @click="setPlayheadSecs(currentTime-5)" ref="min5">
@@ -168,7 +172,7 @@ export default defineComponent({
       }, 200);
 
       if (this.clickCount >= 2) {
-        this.showInput = true;
+        this.showBookMarkDialog();
         setTimeout(() => {
           const input = this.$refs.commentInput as HTMLInputElement;
           input.focus();
@@ -177,6 +181,14 @@ export default defineComponent({
         let time = i / this.nSamples * this.duration;
         this.setPlayheadSecs(time);
       }
+    },
+    onBookMarkClicked() {
+      this.pause();
+      this.audio.currentTime = this.audio.currentTime - 0.5;
+      this.showBookMarkDialog();
+    },
+    showBookMarkDialog() {
+      this.showInput = true;
     },
     setPlayBackRate(multiplier : number){
       this.audio.playbackRate = multiplier;
@@ -319,6 +331,9 @@ export default defineComponent({
     this.button = this.$refs.playpause as HTMLSpanElement;
     this.buttonSmall = this.$refs.playPauseSmall as HTMLSpanElement;
     this.setBtnIcon('play');
+
+    this.bookmarkButton = this.$refs.bookmarkButton as HTMLSpanElement;
+    setIcon(this.bookmarkButton, 'bookmark-plus');
 
     // add event listeners
     document.addEventListener('allpause', () => {  this.setBtnIcon('play'); });

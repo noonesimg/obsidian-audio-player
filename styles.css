@@ -53,6 +53,23 @@ If your plugin does not need CSS, delete this file.
 .played {
 	background-color: var(--color-accent-1);
 }
+.bookmarkButton {
+	flex: 1;
+	margin: 6px;
+	background-color: var(--color-base-50);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 5px;
+	border-radius: 15px;
+	max-height: 30px;
+	max-width: 30px;
+	opacity: 0.8;
+	transition: all 0.15s;
+}
+.bookmarkButton:hover {
+	opacity: 1;
+}
 .playpause {
 	flex: 1;
 	margin: 6px;
