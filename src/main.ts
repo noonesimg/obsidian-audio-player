@@ -36,6 +36,31 @@ export default class AudioPlayer extends Plugin {
 			},
 		});
 
+		this.addCommand({
+			id: "add-audio-comment",
+			name: "Add bookmark",
+			callback: () => {
+				const ev = new Event("addcomment");
+				document.dispatchEvent(ev);
+			}
+		});
+
+		this.addCommand({
+			id: "audio-forward-5s",
+			name: "+5 sec",
+			callback: () => {
+				if (player.src) player.currentTime += 5;
+			}
+		});
+
+		this.addCommand({
+			id: "audio-back-5s",
+			name: "-5 sec",
+			callback: () => {
+				if (player.src) player.currentTime -= 5;
+			}
+		});
+
 		this.registerMarkdownCodeBlockProcessor(
 			"audio-player",
 			(

@@ -163,6 +163,13 @@ export default defineComponent({
         this.saveCache();
       })
     },
+    showCommentInput() {
+      this.showInput = true;
+      setTimeout(() => {
+        const input = this.$refs.commentInput as HTMLInputElement;
+        input.focus();
+      })
+    },
     barMouseDownHandler(i: number) {
       this.clickCount += 1;
       setTimeout(() => {
@@ -170,11 +177,7 @@ export default defineComponent({
       }, 200);
 
       if (this.clickCount >= 2) {
-        this.showInput = true;
-        setTimeout(() => {
-          const input = this.$refs.commentInput as HTMLInputElement;
-          input.focus();
-        })
+        this.showCommentInput();
       } else {
         let time = i / this.nSamples * this.duration;
         this.setPlayheadSecs(time);
@@ -288,10 +291,14 @@ export default defineComponent({
       this.setBtnIcon('play'); 
     });
     document.addEventListener('allresume', () => {
-      if (this.audio.src === this.srcPath) {
+      if (this.isCurrent())
         this.setBtnIcon('pause');
-      }
     })
+    document.addEventListener('addcomment', () => {
+      if (this.isCurrent()) 
+        this.showCommentInput();
+    })
+
     this.audio.addEventListener('ended', () => {
       if (this.audio.src === this.srcPath)
         this.setBtnIcon('play');
