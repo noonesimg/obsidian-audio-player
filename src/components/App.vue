@@ -102,11 +102,12 @@ export default defineComponent({
     displayedCurrentTime() { return secondsToString(this.currentTime); },
     displayedDuration() { return secondsToString(this.duration); },
     currentBar() { return Math.floor(this.currentTime / this.duration * this.nSamples); },
-    commentsSorted() { return this.comments.sort((x: AudioComment, y:AudioComment) => x.timeNumber - y.timeNumber); }
+    commentsSorted() { return this.comments.sort((x: AudioComment, y:AudioComment) => x.timeNumber - y.timeNumber); },
   },
   methods: {
     getSectionInfo() { return this.ctx.getSectionInfo(this.mdElement); },
     getParentWidth() { return this.mdElement.clientWidth },
+    isCurrent() { return this.audio.src === this.srcPath; },
     onResize() { 
       this.smallSize = this.$el.clientWidth < 300;
     },
@@ -176,16 +177,18 @@ export default defineComponent({
       } else {
         let time = i / this.nSamples * this.duration;
         this.setPlayheadSecs(time);
+        if (!this.isCurrent()) 
+          this.togglePlay();
       }
     },
     setPlayheadSecs(time: any) {
       this.currentTime = time;
-      if (this.audio.src === this.srcPath) {
+      if (this.isCurrent()) {
         this.audio.currentTime = time;
       }
     },
     togglePlay() {
-      if (!(this.audio.src === this.srcPath)) {
+      if (!this.isCurrent()) {
         this.audio.src = this.srcPath;
       }
 
@@ -202,10 +205,12 @@ export default defineComponent({
       }
       this.audio.addEventListener('timeupdate', this.timeUpdateHandler);
       this.audio?.play();
+      this.playing = true;
       this.setBtnIcon('pause');      
     },
     pause() {
       this.audio?.pause();
+      this.playing = false;
       this.setBtnIcon('play');
     },
     globalPause() {
@@ -213,7 +218,7 @@ export default defineComponent({
       document.dispatchEvent(ev);
     },
     timeUpdateHandler() {
-      if (this.audio.src === this.srcPath)
+      if (this.isCurrent())
         this.currentTime = this.audio?.currentTime;
     },
     setBtnIcon(icon: string) { 
@@ -265,9 +270,10 @@ export default defineComponent({
     this.setBtnIcon('play');
 
     // add event listeners
-    document.addEventListener('allpause', () => {  this.setBtnIcon('play'); });
+    document.addEventListener('allpause', () => {  
+      this.setBtnIcon('play'); 
+    });
     document.addEventListener('allresume', () => {
-      console.log('test');
       if (this.audio.src === this.srcPath) {
         this.setBtnIcon('pause');
       }
