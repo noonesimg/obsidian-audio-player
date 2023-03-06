@@ -1,6 +1,6 @@
 <template>
-  <div class="comment">
-    <span class="timestamp" @click="emitMovePlayhead">{{ cmt?.timeString }}</span>
+  <div class="comment" @click="emitMovePlayhead">
+    <span class="timestamp">{{ cmt?.timeString }}</span>
     <span class="content">{{ cmt?.content }}</span>
   </div>
   

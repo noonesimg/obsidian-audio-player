@@ -49,7 +49,7 @@
       <button @click="showInput = false; newComment = ''">Cancel</button>
     </div>
     <div class="comment-list">
-      <AudioCommentVue v-for="cmt in commentsSorted" 
+      <AudioCommentVue v-for="cmt in commentsSorted" v-bind:class="{'active-comment': cmt == activeComment }"
         @move-playhead="setPlayheadSecs" @remove="removeComment"
         :cmt="cmt" :key="cmt.timeString"></AudioCommentVue>
     </div>
@@ -93,6 +93,7 @@ export default defineComponent({
       showInput: false,
       newComment: '',
       comments: [] as AudioComment[],
+      activeComment: null as AudioComment | null,
 
       ro: ResizeObserver,
       smallSize: false,
@@ -177,12 +178,14 @@ export default defineComponent({
       } else {
         let time = i / this.nSamples * this.duration;
         this.setPlayheadSecs(time);
-        if (!this.isCurrent()) 
-          this.togglePlay();
+        
       }
     },
     setPlayheadSecs(time: any) {
       this.currentTime = time;
+      if (!this.isCurrent()) 
+          this.togglePlay();
+
       if (this.isCurrent()) {
         this.audio.currentTime = time;
       }
@@ -218,8 +221,19 @@ export default defineComponent({
       document.dispatchEvent(ev);
     },
     timeUpdateHandler() {
-      if (this.isCurrent())
+      if (this.isCurrent()) {
         this.currentTime = this.audio?.currentTime;
+
+        const nextCommencts = this.commentsSorted.filter((x: AudioComment) => this.audio?.currentTime >= x.timeNumber);
+        
+        if (nextCommencts.length == 1) {
+          this.activeComment = nextCommencts[0];
+        }
+        if (nextCommencts.length > 1) {
+          this.activeComment = nextCommencts[nextCommencts.length - 1];
+        }
+      }
+
     },
     setBtnIcon(icon: string) { 
       setIcon(this.button, icon);

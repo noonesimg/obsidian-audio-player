@@ -159,3 +159,10 @@ If your plugin does not need CSS, delete this file.
 .comment > .timestamp:hover {
 	color: var(--color-accent-1);
 }
+
+.active-comment {
+	background-color: #ffffff10;
+}
+.active-comment > .timestamp {
+	color: var(--white);
+}
