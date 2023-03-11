@@ -53,7 +53,7 @@
       <button @click="showInput = false; newComment = ''">Cancel</button>
     </div>
     <div class="comment-list">
-      <AudioCommentVue v-for="cmt in commentsSorted" 
+      <AudioCommentVue v-for="cmt in commentsSorted" v-bind:class="{'active-comment': cmt == activeComment }"
         @move-playhead="setPlayheadSecs" @remove="removeComment"
         :cmt="cmt" :key="cmt.timeString"></AudioCommentVue>
     </div>
@@ -97,6 +97,7 @@ export default defineComponent({
       showInput: false,
       newComment: '',
       comments: [] as AudioComment[],
+      activeComment: null as AudioComment | null,
 
       ro: ResizeObserver,
       smallSize: false,
@@ -106,11 +107,12 @@ export default defineComponent({
     displayedCurrentTime() { return secondsToString(this.currentTime); },
     displayedDuration() { return secondsToString(this.duration); },
     currentBar() { return Math.floor(this.currentTime / this.duration * this.nSamples); },
-    commentsSorted() { return this.comments.sort((x: AudioComment, y:AudioComment) => x.timeNumber - y.timeNumber); }
+    commentsSorted() { return this.comments.sort((x: AudioComment, y:AudioComment) => x.timeNumber - y.timeNumber); },
   },
   methods: {
     getSectionInfo() { return this.ctx.getSectionInfo(this.mdElement); },
     getParentWidth() { return this.mdElement.clientWidth },
+    isCurrent() { return this.audio.src === this.srcPath; },
     onResize() { 
       this.smallSize = this.$el.clientWidth < 300;
     },
@@ -165,6 +167,13 @@ export default defineComponent({
         this.saveCache();
       })
     },
+    showCommentInput() {
+      this.showInput = true;
+      setTimeout(() => {
+        const input = this.$refs.commentInput as HTMLInputElement;
+        input.focus();
+      })
+    },
     barMouseDownHandler(i: number) {
       this.clickCount += 1;
       setTimeout(() => {
@@ -172,14 +181,11 @@ export default defineComponent({
       }, 200);
 
       if (this.clickCount >= 2) {
-        this.showBookMarkDialog();
-        setTimeout(() => {
-          const input = this.$refs.commentInput as HTMLInputElement;
-          input.focus();
-        })
+        this.showCommentInput();
       } else {
         let time = i / this.nSamples * this.duration;
         this.setPlayheadSecs(time);
+        
       }
     },
     onBookMarkClicked() {
@@ -198,12 +204,15 @@ export default defineComponent({
     },
     setPlayheadSecs(time: any) {
       this.currentTime = time;
-      if (this.audio.src === this.srcPath) {
+      if (!this.isCurrent()) 
+          this.togglePlay();
+
+      if (this.isCurrent()) {
         this.audio.currentTime = time;
       }
     },
     togglePlay() {
-      if (!(this.audio.src === this.srcPath)) {
+      if (!this.isCurrent()) {
         this.audio.src = this.srcPath;
       }
 
@@ -222,10 +231,12 @@ export default defineComponent({
       this.setLoopValue(this.getLoopSetting());
       this.audio.addEventListener('timeupdate', this.timeUpdateHandler);
       this.audio?.play();
+      this.playing = true;
       this.setBtnIcon('pause');      
     },
     pause() {
       this.audio?.pause();
+      this.playing = false;
       this.setBtnIcon('play');
     },
     globalPause() {
@@ -233,8 +244,19 @@ export default defineComponent({
       document.dispatchEvent(ev);
     },
     timeUpdateHandler() {
-      if (this.audio.src === this.srcPath)
+      if (this.isCurrent()) {
         this.currentTime = this.audio?.currentTime;
+
+        const nextCommencts = this.commentsSorted.filter((x: AudioComment) => this.audio?.currentTime >= x.timeNumber);
+        
+        if (nextCommencts.length == 1) {
+          this.activeComment = nextCommencts[0];
+        }
+        if (nextCommencts.length > 1) {
+          this.activeComment = nextCommencts[nextCommencts.length - 1];
+        }
+      }
+
     },
     setBtnIcon(icon: string) { 
       setIcon(this.button, icon);
@@ -336,12 +358,17 @@ export default defineComponent({
     setIcon(this.bookmarkButton, 'bookmark-plus');
 
     // add event listeners
-    document.addEventListener('allpause', () => {  this.setBtnIcon('play'); });
-    document.addEventListener('allresume', () => {
-      if (this.audio.src === this.srcPath) {
-        this.setBtnIcon('pause');
-      }
+    document.addEventListener('allpause', () => {  
+      this.setBtnIcon('play'); 
     });
+    document.addEventListener('allresume', () => {
+      if (this.isCurrent())
+        this.setBtnIcon('pause');
+    })
+    document.addEventListener('addcomment', () => {
+      if (this.isCurrent()) 
+        this.showCommentInput();
+    })
     document.addEventListener('togglePlayState', () => {
       if (this.audio.src === this.srcPath) {
         this.togglePlay()
