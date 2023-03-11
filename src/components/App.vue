@@ -30,12 +30,16 @@
           </span>
         </div>
       </div>
+      <div v-show="!smallSize" class="vert">
+        <div class="bookmarkButton" @click="onBookMarkClicked" ref="bookmarkButton">
+        </div>
+      </div>
     </div>
     <div v-show="smallSize" class="horiz" :style="{'margin': 'auto'}">
       <div class="playpause seconds" @click="setPlayheadSecs(currentTime-5)" ref="min5">
         -5s
       </div>
-      <div class="playpause play-button" @click="togglePlay" ref="playpause1">
+      <div class="playpause play-button" @click="togglePlay" ref="playPauseSmall">
       </div>
       <div class="playpause seconds" @click="setPlayheadSecs(currentTime+5)" ref="add5">
         +5s
@@ -87,7 +91,7 @@ export default defineComponent({
       currentTime: 0,
       playing: false,
       button: undefined as HTMLSpanElement | undefined,
-      button1: undefined as HTMLSpanElement | undefined,
+      buttonSmall: undefined as HTMLSpanElement | undefined,
 
       clickCount: 0,
       showInput: false,
@@ -184,6 +188,20 @@ export default defineComponent({
         
       }
     },
+    onBookMarkClicked() {
+      this.pause();
+      this.audio.currentTime = this.audio.currentTime - 0.5;
+      this.showBookMarkDialog();
+    },
+    showBookMarkDialog() {
+      this.showInput = true;
+    },
+    setPlayBackRate(multiplier : number){
+      this.audio.playbackRate = multiplier;
+    },
+    setLoopValue(value : boolean){
+      this.audio.loop = value;
+    },
     setPlayheadSecs(time: any) {
       this.currentTime = time;
       if (!this.isCurrent()) 
@@ -209,6 +227,8 @@ export default defineComponent({
       if (this.currentTime > 0) {
         this.audio.currentTime = this.currentTime;
       }
+      this.setPlayBackRate(this.getPlaybackSpeedSetting());
+      this.setLoopValue(this.getLoopSetting());
       this.audio.addEventListener('timeupdate', this.timeUpdateHandler);
       this.audio?.play();
       this.playing = true;
@@ -240,9 +260,27 @@ export default defineComponent({
     },
     setBtnIcon(icon: string) { 
       setIcon(this.button, icon);
-      setIcon(this.button1, icon); 
+      setIcon(this.buttonSmall, icon); 
     },
+    getCodeBlockSettingsValues(expretion : RegExp) : Array<string>
+    {
+        const sectionInfo = this.getSectionInfo();
+        const lines = sectionInfo.text.split('\n') as string[];
 
+        return lines.filter(item => item.match(expretion));
+    },
+    getFirstOrDefaultSettingsValue(expretion : RegExp) : string | null 
+    {
+      const filteredLines = this.getCodeBlockSettingsValues(expretion)
+
+      if(filteredLines.length == 0) return null;
+
+      const settingValue = expretion.exec(filteredLines[0])?.at(1);
+
+      if((settingValue === undefined)) return null;
+
+      return settingValue;
+    },
     addComment() {
       if (this.newComment.length == 0)
         return;
@@ -259,12 +297,42 @@ export default defineComponent({
       lines.splice(sectionInfo.lineStart + 2 + i, 1);
       window.app.vault.adapter.write(this.ctx.sourcePath, lines.join('\n'))
     },
-    getComments() : Array<AudioComment> {
+    getLoopValue() : boolean {
+
+      return false;
+    },
+    getPlaybackSpeedSetting() : number {
+      const defaultSpeed = this.audio.defaultPlaybackRate;
+      
+      const regex = new RegExp('playback: *([0-9\.]*)', 'g');
+      
+      const playbackSpeed = this.getFirstOrDefaultSettingsValue(regex);
+      
+      if((playbackSpeed === null)) return defaultSpeed;
+
+      var numericRepr = parseFloat(playbackSpeed);
+
+      if(isNaN(numericRepr)) return defaultSpeed;
+
+      return numericRepr;
+    },
+    getLoopSetting() : boolean {
+      const defaultSpeed = this.audio.defaultPlaybackRate;
+      
+      const regex = new RegExp('loop: *((t|T)rue)', 'g');
+      
+      const loopSetting = this.getFirstOrDefaultSettingsValue(regex);
+      
+      return !(loopSetting === null);
+    },
+    getBookmarkValues() : Array<AudioComment> {
       const sectionInfo = this.getSectionInfo();
       const lines = sectionInfo.text.split('\n') as string[];
-      const cmtLines = lines.slice(sectionInfo.lineStart + 2, sectionInfo.lineEnd);
 
-      const cmts = cmtLines.map((x, i) => {
+      const regex = new RegExp('[0-9]+:[0-9]+:[0-9]+ --- .*', 'g');
+      const filteredLines = lines.filter(item => item.match(regex));
+
+      const cmts = filteredLines.map((x, i) => {
         const split = x.split(' --- ');
         const timeStamp = secondsToNumber(split[0]);
         const cmt: AudioComment = {
@@ -283,8 +351,11 @@ export default defineComponent({
   },
   mounted() {
     this.button = this.$refs.playpause as HTMLSpanElement;
-    this.button1 = this.$refs.playpause1 as HTMLSpanElement;
+    this.buttonSmall = this.$refs.playPauseSmall as HTMLSpanElement;
     this.setBtnIcon('play');
+
+    this.bookmarkButton = this.$refs.bookmarkButton as HTMLSpanElement;
+    setIcon(this.bookmarkButton, 'bookmark-plus');
 
     // add event listeners
     document.addEventListener('allpause', () => {  
@@ -298,7 +369,12 @@ export default defineComponent({
       if (this.isCurrent()) 
         this.showCommentInput();
     })
-
+    document.addEventListener('togglePlayState', () => {
+      if (this.audio.src === this.srcPath) {
+        this.togglePlay()
+        this.setBtnIcon(this.audio.paused ? 'play' : 'pause');
+      }
+    });
     this.audio.addEventListener('ended', () => {
       if (this.audio.src === this.srcPath)
         this.setBtnIcon('play');
@@ -316,7 +392,7 @@ export default defineComponent({
     }
 
     // load comments
-    setTimeout(() => { this.comments = this.getComments(); });
+    setTimeout(() => { this.comments = this.getBookmarkValues(); });
 
 
     this.ro = new ResizeObserver(this.onResize);

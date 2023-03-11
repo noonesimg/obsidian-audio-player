@@ -17,11 +17,12 @@
 ~~~
 just add this to any of your md files
 
-### Two simple Commands
-accessable through command menu (Ctrl-P)
+### simple Commands
+Accessible through command menu (Ctrl-P)
 
 1. **Pause Audio** to pause whatever audio is playing
 2. **Resume Audio** to resume 
+3. **Toggle Audio** to switch between pause and resume
 
 ### Add bookmarks through ui
 ![add_bookmark](https://user-images.githubusercontent.com/117757392/201384274-14831e0b-458e-4a01-9869-34f34ad628cc.gif)
@@ -30,6 +31,8 @@ accessable through command menu (Ctrl-P)
 2. Type your text
 3. Hit enter or press the "Add" button
 4. Click on any bookmark timecode to set the playhead position
+
+There is also a bookmark button that pauses the audio and open the same dialog. After pausing the audio will rewind 0.5 seconds.
 
 ### Add bookmarks through text
 ~~~
@@ -42,6 +45,31 @@ accessable through command menu (Ctrl-P)
 ~~~
 ![image](https://user-images.githubusercontent.com/117757392/201384550-33aa7f25-cadc-4ce5-a846-24d87bd7a05d.png)
 
+### Playback Speed and Looping
+
+Some settings can be manually configured in the comment block. A format must be followed to ensure they are picked up.
+
+```
+SettingName: value
+```
+
+The supported settings are:
+
+**playback** - Control the playback speed of the audio clip accepts any positive decimal number, defaults to 1.
+
+**looping** - Loop the audio accepts "true" or "True" defaults to false.
+
+**Example:**
+~~~
+```audio-player
+[[my awesome audio file.mp3]]
+playback: 0.5
+looping: true
+00:00:44 --- chapter
+00:01:50 --- chapter 2 
+00:02:40 --- chapter 3 in which nothing happened
+```
+~~~
 
 ## How to install
 
