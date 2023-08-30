@@ -7002,7 +7002,8 @@ var AudioPlayer = class extends import_obsidian4.Plugin {
         "mp3",
         "wav",
         "ogg",
-        "flac"
+        "flac",
+        "webm"
       ];
       const link = this.app.metadataCache.getFirstLinkpathDest((0, import_obsidian4.getLinkpath)(filename), filename);
       if (!link || !allowedExtensions.includes(link.extension))
