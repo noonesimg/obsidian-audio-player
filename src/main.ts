@@ -69,8 +69,9 @@ export default class AudioPlayer extends Plugin {
 				ctx: MarkdownPostProcessorContext
 			) => {
 				// parse file name
-				const re = /\[\[(.+)\]\]/g;
+				const re = /\[\[(.+?)(?:\|(.*))?\]\]/g;
 				const filename = re.exec(source)?.at(1);
+				const alias = re.exec(source)?.at(2);
 				if (!filename) return;
 
 				const allowedExtensions = [
@@ -85,8 +86,11 @@ export default class AudioPlayer extends Plugin {
 					getLinkpath(filename),
 					filename
 				);
-				if (!link || !allowedExtensions.includes(link.extension))
+				console.log(link)
+				if (!link || !allowedExtensions.includes(link.extension)) {
+					console.log("invalid link or extension")
 					return;
+				}
 
 				// create root $el
 				const container = el.createDiv();
